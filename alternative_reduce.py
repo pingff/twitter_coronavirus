@@ -10,7 +10,7 @@ from glob import glob
 
 # command line args
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_dir', required=True)
+parser.add_argument('--input_path', nargs='+', required=True)
 parser.add_argument('--keys', nargs='+', required=True)
 args = parser.parse_args()
 
@@ -19,7 +19,7 @@ for key in args.keys:
     yaxis = []
     total = defaultdict(lambda: Counter())
 
-    for path in sorted(glob(args.input_dir + '/*')):
+    for path in sorted(args.input_path):
         with open(path) as f:
             tmp = json.load(f)
             sumnum = 0
