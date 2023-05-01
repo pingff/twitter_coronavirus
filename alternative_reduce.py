@@ -1,32 +1,31 @@
 #!/usr/bin/env python3
-import matplotlib
-import numpy as np
-import json
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 import argparse
-from collections import Counter, defaultdict
-from glob import glob
-
-# command line args
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_path', nargs='+', required=True)
+parser.add_argument('--input_paths', nargs='+', required=True)
 parser.add_argument('--keys', nargs='+', required=True)
 args = parser.parse_args()
 
+# imports
+import json
+from collections import Counter, defaultdict
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
 
 for key in args.keys:
     yaxis = []
     total = defaultdict(lambda: Counter())
-
-    for path in sorted(args.input_path):
+    errors = 0
+    sorted(args.input_paths)
+    for path in args.input_paths:
         with open(path) as f:
             tmp = json.load(f)
             sumnum = 0
             try:
                 for k in tmp[key]:
                     sumnum += tmp[key][k]
-            except:
+            except KeyError:
                 pass
             yaxis.append(sumnum)
 
