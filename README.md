@@ -14,5 +14,5 @@ In this project, a large dataset of tweets was analyzed using MapReduce, a popul
 # Country Frequency for #코로나바이러스
 ![country_korean](https://user-images.githubusercontent.com/112546626/235536348-dd08265e-565c-4fc1-80ab-7ef20d62b178.png)
 
-# Alternative Reduce Map ofr #hospital, #flu, and #sick
+# Alternative Reduce Map of #hospital, #flu, and #sick
 ![sickvhospital_tweet](https://user-images.githubusercontent.com/112546626/235536413-5b73ca01-c21f-4304-8687-567116502a77.png)
