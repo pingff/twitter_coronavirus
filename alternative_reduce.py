@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_paths', nargs='+', required=True)
+parser.add_argument('--input_dir', required=True)
 parser.add_argument('--keys', nargs='+', required=True)
 args = parser.parse_args()
 
@@ -12,13 +12,15 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from glob import glob
+
+input = glob(args.input_dir + '/*')
 
 for key in args.keys:
     yaxis = []
     total = defaultdict(lambda: Counter())
-    errors = 0
-    sorted(args.input_paths)
-    for path in args.input_paths:
+    
+    for path in sorted(input):
         with open(path) as f:
             tmp = json.load(f)
             sumnum = 0
