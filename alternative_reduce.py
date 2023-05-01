@@ -27,7 +27,7 @@ for key in args.keys:
             try:
                 for k in tmp[key]:
                     sumnum += tmp[key][k]
-            except KeyError:
+            except:
                 pass
             yaxis.append(sumnum)
 
