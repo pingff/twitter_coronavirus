@@ -52,6 +52,7 @@ for key in keys:
 plt.xlabel("Date in 2020")
 plt.ylabel("Times Mentioned in Tweets")
 plt.title("Times a Hastag was mentioned in Tweets by day in 2020")
+plt.xticks(x[::60], [d.strftime('%b %d') for d in x[::60]])
 plt.legend()
 plt.savefig("sickvhospital_tweet.png")
 plt.show()
