@@ -1,37 +1,53 @@
 #!/usr/bin/env python3
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument('--input_dir', required=True)
-parser.add_argument('--keys', nargs='+', required=True)
-args = parser.parse_args()
-
-# imports
-import json
-from collections import Counter, defaultdict
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import numpy as np
-from glob import glob
+import glob
+from datetime import datetime
 
-input = glob(args.input_dir + '/*')
+# command line args
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--key',required=True)
+parser.add_argument('--percent',action='store_true')
+args = parser.parse_args()
 
-for key in args.keys:
-    yaxis = []
-    total = defaultdict(lambda: Counter())
-    
-    for path in sorted(input):
-        with open(path) as f:
-            tmp = json.load(f)
-            sumnum = 0
-            try:
-                for k in tmp[key]:
-                    sumnum += tmp[key][k]
-            except:
-                pass
-            yaxis.append(sumnum)
+# imports
+import os
+import json
+from collections import Counter,defaultdict
 
-    plt.plot(np.arange(len(yaxis)), yaxis, label=key)
+paths = glob.glob('outputs/geoTwitter*.country')
+results = {}
+
+for path in paths:
+        date_str = os.path.splitext(os.path.basename(path))[0][10:18]
+        date = datetime.strptime(date_str, '%y-%m-%d')
+        try:
+            with open(path) as f:
+                data = json.load(f)
+                for key in args.key.split(','):
+                    if key in data:
+                        if date not in results:
+                            results[date] = defaultdict(int)
+                        results[date][key] += sum(data[key].values())
+        except json.decoder.JSONDecodeError:
+            print(f"Skipping invalid JSON file: {path}")
+
+results = dict(sorted(results.items()))
+print("results=", results)
+
+keys = set()
+for date, data in results.items():
+    keys.update(data.keys())
+keys = list(keys)
+print("keys=", keys)
+for key in keys:
+    print("key =", key )
+    x = list(results.keys())
+    y = [results[date][key] for date in x]
+    x = [date.date() for date in x]  # convert to date objec
+    plt.plot(x,y,label = key)
 
 plt.xlabel("Date in 2020")
 plt.ylabel("Times Mentioned in Tweets")
@@ -39,3 +55,4 @@ plt.title("Times a Hastag was mentioned in Tweets by day in 2020")
 plt.legend()
 plt.xticks([0, 60, 121, 182, 244, 305], ["Jan", "Mar", "May", "Jul", "Sept", "Nov"])
 plt.savefig("sickvhospital_tweet.png")
+plt.show()
